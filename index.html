@@ -187,6 +187,196 @@
     }
   </script>
 
+</body>
+DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Astro Luck — Кафе & Хороскоп</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+      text-align: center;
+    }
+    h1 { color: #fbbf24; font-size: 2.2rem; margin-bottom: 8px; text-shadow: 0 0 12px rgba(251, 191, 36, 0.4); }
+    .subtitle { color: #94a3b8; font-size: 0.95rem; margin-bottom: 24px; }
+    .card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      margin-bottom: 24px;
+    }
+    h2 { color: #fbbf24; font-size: 1.3rem; margin-bottom: 12px; }
+    input[type="date"], input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      color: #f8fafc;
+      font-size: 1rem;
+      margin-bottom: 14px;
+      outline: none;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #d97706 0%, #f59e0b 100%);
+      color: #0f172a;
+      font-weight: bold;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    button:active { transform: scale(0.98); }
+    .result {
+      margin-top: 16px;
+      display: none;
+      text-align: left;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 14px;
+    }
+    .result p { color: #cbd5e1; line-height: 1.5; margin-bottom: 8px; }
+    .img-preview {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>✨ Astro Luck ✨</h1>
+  <p class="subtitle">Вашият личен астрологичен & кафе съветник</p>
+
+  <!-- СЕКЦИЯ: Гледане на кафе със снимка -->
+  <div class="card">
+    <h2>☕ Гледане на кафе</h2>
+    <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:12px;">Качете или направете снимка на утайката от вашата чаша:</p>
+    
+    <input type="file" id="coffeeImage" accept="image/*" onchange="previewImage(event)">
+    <img id="preview" class="img-preview" alt="Снимка на кафе">
+
+    <button onclick="analyzeCoffee()">🔮 Анализирай снимката</button>
+
+    <div class="result" id="coffeeResult">
+      <h3 style="color:#fbbf24; margin-bottom:6px;" id="coffeeSymbol"></h3>
+      <p id="coffeeReading"></p>
+    </div>
+  </div>
+
+  <!-- СЕКЦИЯ: Личен хороскоп по дата -->
+  <div class="card">
+    <h2>📅 Личен хороскоп</h2>
+    <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:12px;">Въведете вашата дата на раждане:</p>
+    
+    <input type="date" id="birthdate">
+
+    <button onclick="calculateHoroscope()">⭐ Разкрий хороскопа за днес</button>
+
+    <div class="result" id="horoscopeResult">
+      <h3 style="color:#fbbf24; margin-bottom:6px;" id="userSign"></h3>
+      <p id="horoscopeText"></p>
+      <p><strong>🍀 Щастливо число за днес:</strong> <span id="luckyNum" style="color:#fbbf24;"></span></p>
+    </div>
+  </div>
+
+  <script>
+    // Преглед на качената снимка
+    function previewImage(event) {
+      const preview = document.getElementById('preview');
+      const file = event.target.files[0];
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = 'block';
+      }
+    }
+
+    // Тълкуване на снимката от кафе
+    const coffeeReadings = [
+      { symbol: "🕊️ Вижда се символ: Птица", text: "Утайката показва добри новини и бързо писмо от важен за вас човек." },
+      { symbol: "🗝️ Вижда се символ: Ключ", text: "Предстои ви отваряне на врата към нов шанс или решаване на финансов въпрос." },
+      { symbol: "❤️ Вижда се символ: Сърце", text: "Топлина и хармония в личния живот. Очаква ви приятна изненада." },
+      { symbol: "🛤️ Вижда се символ: Път", text: "Предстои ви кратко пътуване или важна крачка към промяна." },
+      { symbol: "⭐ Вижда се символ: Звезда", text: "Голям късмет! Денят е идеален за сбъдване на лично намерение." }
+    ];
+
+    function analyzeCoffee() {
+      const fileInput = document.getElementById('coffeeImage');
+      if (!fileInput.files || fileInput.files.length === 0) {
+        alert("Моля, първо изберете или направете снимка на кафето!");
+        return;
+      }
+      
+      const randomReading = coffeeReadings[Math.floor(Math.random() * coffeeReadings.length)];
+      document.getElementById('coffeeSymbol').innerText = randomReading.symbol;
+      document.getElementById('coffeeReading').innerText = randomReading.text;
+      document.getElementById('coffeeResult').style.display = 'block';
+    }
+
+    // Определяне на зодия и личен хороскоп по дата
+    function calculateHoroscope() {
+      const dateVal = document.getElementById('birthdate').value;
+      if (!dateVal) {
+        alert("Моля, въведете дата на раждане!");
+        return;
+      }
+
+      const date = new Date(dateVal);
+      const day = date.getDate();
+      const month = date.getMonth() + 1;
+
+      let sign = "";
+      if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) sign = "♈ Овен";
+      else if ((month == 4 && day >= 20) || (month == 5 && day <= 20)) sign = "♉ Телец";
+      else if ((month == 5 && day >= 21) || (month == 6 && day <= 20)) sign = "♊ Близнаци";
+      else if ((month == 6 && day >= 21) || (month == 7 && day <= 22)) sign = "♋ Рак";
+      else if ((month == 7 && day >= 23) || (month == 8 && day <= 22)) sign = "♌ Лъв";
+      else if ((month == 8 && day >= 23) || (month == 9 && day <= 22)) sign = "♍ Дева";
+      else if ((month == 9 && day >= 23) || (month == 10 && day <= 22)) sign = "♎ Везни";
+      else if ((month == 10 && day >= 23) || (month == 11 && day <= 21)) sign = "♏ Скорпион";
+      else if ((month == 11 && day >= 22) || (month == 12 && day <= 21)) sign = "♐ Стрелец";
+      else if ((month == 12 && day >= 22) || (month == 1 && day <= 19)) sign = "♑ Козирог";
+      else if ((month == 1 && day >= 20) || (month == 2 && day <= 18)) sign = "♒ Водолей";
+      else sign = "♓ Риби";
+
+      const dailyMessages = [
+        "Днес интуицията ви е изключително силна. Доверете се на първия си усещане.",
+        "Енергията ви е подходяща за започване на нови задачи и разговори.",
+        "Очаква ви спокоен ден с фокус върху вашите лични цели и хармония.",
+        "Днес ще получите неочаквана подкрепа от близък човек.",
+        "Финансовите ви възможности се подобряват. Бъдете смели в идеите си!"
+      ];
+
+      const randomMsg = dailyMessages[Math.floor(Math.random() * dailyMessages.length)];
+      const lucky = Math.floor(Math.random() * 90) + 7;
+
+      document.getElementById('userSign').innerText = "Зодия: " + sign;
+      document.getElementById('horoscopeText').innerText = randomMsg;
+      document.getElementById('luckyNum').innerText = lucky;
+      document.getElementById('horoscopeResult').style.display = 'block';
+    }
+  </script>
+
 <!DOCTYPE html>
 <html lang="bg">
 <head>
