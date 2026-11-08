@@ -1,4 +1,21 @@
-!DOCTYPE html>
+!-- Тото и Евромилион генератор според дата -->
+  <div class="card">
+    <h2>🍀 Тото & Евромилион по дата</h2>
+    <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:8px;">Изберете дата за генериране на числа:</p>
+    <input type="date" id="lottoDate">
+    <button onclick="generateLottoByDate()">🎲 Генерирай числа</button>
+    
+    <div class="result" id="lottoResult">
+      <p class="lottery-title" style="color:#fbbf24; font-weight:bold; margin-top:8px;">La Primitiva / BonoLoto (6 числа от 1 до 49):</p>
+      <div class="numbers-box" id="primitivaNums"></div>
+
+      <p class="lottery-title" style="color:#fbbf24; font-weight:bold; margin-top:8px;">EuroMillions (5 основни от 1 до 50):</p>
+      <div class="numbers-box" id="euroMainNums"></div>
+
+      <p class="lottery-title" style="color:#fbbf24; font-weight:bold; margin-top:8px;">EuroMillions (2 звезди от 1 до 12):</p>
+      <div class="numbers-box" id="euroStars"></div>
+    </div>
+  DOCTYPE html>
 <html lang="bg">
 <head>
   <meta charset="UTF-8">
