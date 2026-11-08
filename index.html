@@ -1,20 +1,102 @@
-!-- Тото и Евромилион генератор според дата -->
-  <div class="card">
-    <h2>🍀 Тото & Евромилион по дата</h2>
-    <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:8px;">Изберете дата за генериране на числа:</p>
-    <input type="date" id="lottoDate">
-    <button onclick="generateLottoByDate()">🎲 Генерирай числа</button>
-    
-    <div class="result" id="lottoResult">
-      <p class="lottery-title" style="color:#fbbf24; font-weight:bold; margin-top:8px;">La Primitiva / BonoLoto (6 числа от 1 до 49):</p>
-      <div class="numbers-box" id="primitivaNums"></div>
-
-      <p class="lottery-title" style="color:#fbbf24; font-weight:bold; margin-top:8px;">EuroMillions (5 основни от 1 до 50):</p>
-      <div class="numbers-box" id="euroMainNums"></div>
-
-      <p class="lottery-title" style="color:#fbbf24; font-weight:bold; margin-top:8px;">EuroMillions (2 звезди от 1 до 12):</p>
-      <div class="numbers-box" id="euroStars"></div>
-    </div>
+!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Astro Luck — Вашият мистичен съветник</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+      text-align: center;
+    }
+    h1 { color: #fbbf24; font-size: 2rem; margin-bottom: 6px; text-shadow: 0 0 12px rgba(251, 191, 36, 0.4); }
+    .subtitle { color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px; }
+    .card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 18px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      margin-bottom: 16px;
+    }
+    h2 { color: #fbbf24; font-size: 1.2rem; margin-bottom: 10px; }
+    input[type="date"], input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      color: #f8fafc;
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+      outline: none;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #d97706 0%, #f59e0b 100%);
+      color: #0f172a;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+      margin-top: 6px;
+    }
+    button:active { transform: scale(0.98); }
+    .result {
+      margin-top: 14px;
+      display: none;
+      text-align: left;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 12px;
+    }
+    .result p { color: #cbd5e1; font-size: 0.9rem; line-height: 1.4; margin-bottom: 6px; }
+    .lottery-title { color: #fbbf24 !important; font-weight: bold; margin-top: 8px; }
+    .numbers-box {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .ball {
+      width: 32px;
+      height: 32px;
+      background: #fbbf24;
+      color: #0f172a;
+      font-weight: bold;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 10px rgba(251, 191, 36, 0.3);
+    }
+    .star-ball { background: #ec4899; color: #fff; }
+    .img-preview {
+      width: 100%;
+      max-height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
   DOCTYPE html>
 <html lang="bg">
 <head>
