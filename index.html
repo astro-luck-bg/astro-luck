@@ -1,10 +1,24 @@
-##astro-personal .astro-card p {
+
+
+<style>
+/* ASTRO PERSONAL */
+#astro-personal .astro-card {
+  background: #ffffff;
+  color: #30243f;
+  border: 1px solid #e4d8f0;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 3px 12px #38245f12;
+}
+
+#astro-personal .astro-card p {
   color: #403849;
   line-height: 1.6;
 }
 
 #astro-personal .astro-muted {
-  color: #62596b;
+  color: #51465e;
 }
 
 #astro-personal .astro-result {
@@ -14,17 +28,9 @@
 
 #astro-personal .astro-history {
   color: #30243f;
-} .astro-card {
-  background: #fff;
-  color: #30243f;
-  border: 1px solid #e4d8f0;
-  border-radius: 16px;
-  padding: 18px;
-  margin-bottom: 16px;
-  box-shadow: 0 3px 12px #38245f12;
 }
-<!-- ASTRO LUCK LOTTERY -->
 
+/* ASTRO LOTTERY */
 #astro-lottery {
   max-width: 850px;
   margin: 20px auto;
@@ -32,42 +38,59 @@
   color: #30243f;
   font-family: Arial, sans-serif;
 }
-.lottery-card {
-  background: white;
+
+#astro-lottery .lottery-card {
+  background: #ffffff;
+  color: #30243f;
   border: 1px solid #e4d8f0;
   border-radius: 16px;
   padding: 17px;
   margin-bottom: 14px;
 }
-.lottery-card h3 { color: #59377d; }
-.lottery-balls {
+
+#astro-lottery .lottery-card h2,
+#astro-lottery .lottery-card h3 {
+  color: #59377d;
+}
+
+#astro-lottery .lottery-balls {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin: 12px 0;
 }
-.lottery-ball {
+
+#astro-lottery .lottery-ball {
   width: 39px;
   height: 39px;
   border-radius: 50%;
   background: #65428c;
-  color: white;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
 }
-.lottery-star { background: #d2a83f; color: #30243f; }
-.lottery-button {
+
+#astro-lottery .lottery-star {
+  background: #d2a83f;
+  color: #30243f;
+}
+
+#astro-lottery .lottery-button {
   background: #513477;
-  color: white;
+  color: #ffffff;
   border: 0;
   border-radius: 10px;
   padding: 11px 15px;
   cursor: pointer;
   font-weight: bold;
 }
-.lottery-note { font-size: 12px; color: #766d80; }
+
+#astro-lottery .lottery-note {
+  font-size: 12px;
+  color: #51465e;
+}
 </style>
 
 <div id="astro-lottery">
