@@ -1,4 +1,354 @@
 
+<!-- ASTRO LUCK: ЛИЧНА НАТАЛНА КАРТА И ПРОГНОЗИ -->
+<style>
+#astro-personal {
+  font-family: Arial, sans-serif;
+  color: #30243f;
+  max-width: 850px;
+  margin: 20px auto;
+  padding: 15px;
+}
+#astro-personal .astro-card {
+  background: #fff;
+  border: 1px solid #e4d8f0;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 3px 12px #38245f12;
+}
+#astro-personal h2 {
+  color: #513477;
+  margin-top: 0;
+}
+#astro-personal h3 {
+  color: #76539b;
+}
+#astro-personal button {
+  background: #513477;
+  color: white;
+  border: 0;
+  border-radius: 9px;
+  padding: 10px 15px;
+  cursor: pointer;
+  margin: 4px;
+}
+#astro-personal .astro-number {
+  font-size: 48px;
+  font-weight: bold;
+  text-align: center;
+  color: #76539b;
+}
+#astro-personal .astro-muted {
+  color: #756d7c;
+  font-size: 13px;
+}
+#astro-personal .astro-result {
+  background: #f4eff9;
+  border-radius: 10px;
+  padding: 13px;
+  line-height: 1.6;
+  margin-top: 10px;
+}
+#astro-personal .astro-history {
+  border-bottom: 1px solid #e7dfed;
+  padding: 10px 0;
+}
+</style>
+
+<div id="astro-personal">
+
+  <div class="astro-card">
+    <h2>🌟 Моята натална карта</h2>
+    <p><b>Рождена дата:</b> 12.09.1976</p>
+    <p><b>Час:</b> 12:15</p>
+    <p><b>Място:</b> София, България</p>
+    <p><b>Слънчев знак:</b> Дева ♍</p>
+
+    <h3>Какво означава моята зодия?</h3>
+    <p>
+      Дева е знак на наблюдателността, практичността,
+      отговорността и стремежа към съвършенство.
+      Ти можеш да бъдеш човек, който забелязва детайлите,
+      организира и поема отговорност.
+    </p>
+
+    <div class="astro-result">
+      <b>Асцендент и планети</b>
+      <p>
+        Тук ще се показват изчислените асцендент,
+        Луна, Меркурий, Венера, Марс и останалите
+        планети с обяснение за всяка позиция.
+      </p>
+      <p class="astro-muted">
+        За точни позиции е необходимо свързване
+        с надежден астрологичен изчислител.
+        Не трябва да се попълват предполагаеми позиции.
+      </p>
+    </div>
+  </div>
+
+  <div class="astro-card">
+    <h2>🔮 Моята лична прогноза за днес</h2>
+    <p id="astro-date"></p>
+
+    <h3>Моето число на деня</h3>
+    <div class="astro-number" id="astro-number">—</div>
+    <p id="astro-number-meaning" class="astro-result"></p>
+
+    <div id="astro-forecast"></div>
+
+    <button onclick="astroSaveForecast()">
+      Запази прогнозата
+    </button>
+  </div>
+
+  <div class="astro-card">
+    <h2>📖 История на моите прогнози</h2>
+    <p class="astro-muted">
+      Запазените прогнози се съхраняват в браузъра на устройството.
+    </p>
+    <div id="astro-history"></div>
+    <button onclick="astroClearHistory()">
+      Изтрий историята
+    </button>
+  </div>
+
+</div>
+
+<script>
+(function () {
+
+  const BIRTH_DATE = "12091976";
+
+  function digitSum(value) {
+    return String(value)
+      .replace(/\D/g, "")
+      .split("")
+      .reduce((sum, digit) => sum + Number(digit), 0);
+  }
+
+  function reduceNumber(number) {
+    while (number > 9) {
+      number = digitSum(number);
+    }
+    return number;
+  }
+
+  function getToday() {
+    const now = new Date();
+
+    const day = String(now.getDate()).padStart(2, "0");
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const year = now.getFullYear();
+
+    return {
+      key: `${year}-${month}-${day}`,
+      display: `${day}.${month}.${year}`
+    };
+  }
+
+  function getPersonalNumber() {
+    const today = getToday();
+    const birthNumber = digitSum(BIRTH_DATE);
+    const todayNumber = digitSum(today.key);
+    return reduceNumber(birthNumber + todayNumber);
+  }
+
+  const meanings = {
+    1: "Ново начало. Ден за инициатива, смелост и лични решения.",
+    2: "Партньорство и търпение. Подходящ ден за разговори и сътрудничество.",
+    3: "Общуване и идеи. Обърни внимание на новини и полезни контакти.",
+    4: "Стабилност и ред. Подреди задачите и документите си.",
+    5: "Промени и движение. Бъди гъвкава и готова за нови възможности.",
+    6: "Семейство и отговорност. Отдели време за близките си.",
+    7: "Размисъл и интуиция. Не бързай с важните решения.",
+    8: "Работа и финанси. Планирай целите си и защитавай труда си.",
+    9: "Завършване и равносметка. Освободи място за нов етап."
+  };
+
+  function makeForecast(number) {
+    const forecasts = {
+      1: [
+        "Работа: Поеми инициатива и покажи какво можеш.",
+        "Пари: Планирай новите си финансови цели.",
+        "Здраве: Намери време за почивка.",
+        "Семейство: Изрази ясно какво чувстваш.",
+        "Късмет: Благоприятен символичен ден за ново начало."
+      ],
+      2: [
+        "Работа: Сътрудничеството ще бъде по-полезно от конфликтите.",
+        "Пари: Избягвай прибързани покупки.",
+        "Здраве: Пази баланса между работа и почивка.",
+        "Семейство: Подходящ момент за спокоен разговор.",
+        "Късмет: Обърни внимание на предложенията около теб."
+      ],
+      3: [
+        "Работа: Общуването и новите контакти са на преден план.",
+        "Пари: Провери внимателно условията на всяко предложение.",
+        "Здраве: Намери време за разходка и възстановяване.",
+        "Семейство: Ден за повече настроение и близост.",
+        "Късмет: Новина може да ти даде интересна идея."
+      ],
+      4: [
+        "Работа: Постоянството и дисциплината са твоята сила.",
+        "Пари: Подреди сметките и задълженията си.",
+        "Здраве: Не претоварвай тялото си.",
+        "Семейство: Практичната помощ ще бъде оценена.",
+        "Късмет: Малките стъпки водят към стабилност."
+      ],
+      5: [
+        "Работа: Бъди отворена към промени и нови възможности.",
+        "Пари: Избягвай рискови финансови решения.",
+        "Здраве: Движението и почивката трябва да са балансирани.",
+        "Семейство: Възможни са интересни разговори.",
+        "Късмет: Ден за нови идеи и разнообразие."
+      ],
+      6: [
+        "Работа: Покажи отговорност, но не поемай всичко сама.",
+        "Пари: Помисли за стабилността на дома.",
+        "Здраве: Обърни внимание на личния си комфорт.",
+        "Семейство: Близките хора са на преден план.",
+        "Късмет: Търси хармония и спокойствие."
+      ],
+      7: [
+        "Работа: Наблюдавай и анализирай преди да действаш.",
+        "Пари: Провери подробностите, преди да се ангажираш.",
+        "Здраве: Дай си време за възстановяване.",
+        "Семейство: Спокойният разговор ще помогне.",
+        "Късмет: Довери се на опита си, но проверявай фактите."
+      ],
+      8: [
+        "Работа: Ден за амбиция, професионални цели и признание.",
+        "Пари: Прегледай доходите и разходите си.",
+        "Здраве: Не пренебрегвай почивката.",
+        "Семейство: Намери равновесие между работа и дом.",
+        "Късмет: Фокусирай се върху дългосрочните си цели."
+      ],
+      9: [
+        "Работа: Довърши започнатото и направи равносметка.",
+        "Пари: Освободи се от ненужни разходи.",
+        "Здраве: Погрижи се за спокойствието си.",
+        "Семейство: Покажи разбиране и търпение.",
+        "Късмет: Подготви се символично за нов етап."
+      ]
+    };
+
+    return forecasts[number];
+  }
+
+  function renderForecast() {
+    const today = getToday();
+    const number = getPersonalNumber();
+
+    document.getElementById("astro-date").textContent =
+      "Днешна дата: " + today.display;
+
+    document.getElementById("astro-number").textContent = number;
+
+    document.getElementById("astro-number-meaning").textContent =
+      meanings[number];
+
+    const forecast = makeForecast(number);
+
+    document.getElementById("astro-forecast").innerHTML =
+      forecast.map(item => {
+        return `<div class="astro-result">${item}</div>`;
+      }).join("");
+  }
+
+  function readHistory() {
+    try {
+      return JSON.parse(
+        localStorage.getItem("astroLuckHistory") || "[]"
+      );
+    } catch (error) {
+      return [];
+    }
+  }
+
+  window.astroSaveForecast = function () {
+    const today = getToday();
+    const number = getPersonalNumber();
+
+    const history = readHistory();
+
+    const entry = {
+      date: today.key,
+      displayDate: today.display,
+      number: number,
+      meaning: meanings[number],
+      forecast: makeForecast(number)
+    };
+
+    const existing = history.findIndex(
+      item => item.date === today.key
+    );
+
+    if (existing >= 0) {
+      history[existing] = entry;
+    } else {
+      history.unshift(entry);
+    }
+
+    localStorage.setItem(
+      "astroLuckHistory",
+      JSON.stringify(history.slice(0, 365))
+    );
+
+    renderHistory();
+
+    alert("Прогнозата е запазена!");
+  };
+
+  function renderHistory() {
+    const history = readHistory();
+    const container = document.getElementById("astro-history");
+
+    if (!history.length) {
+      container.innerHTML = "<p>Все още няма запазени прогнози.</p>";
+      return;
+    }
+
+    container.innerHTML = history.map((item, index) => `
+      <div class="astro-history">
+        <b>${item.displayDate}</b>
+        <p>Лично число: ${item.number}</p>
+        <p>${item.meaning}</p>
+        <button onclick="astroShowHistory(${index})">
+          Прочети прогнозата
+        </button>
+      </div>
+    `).join("");
+  }
+
+  window.astroShowHistory = function (index) {
+    const history = readHistory();
+    const item = history[index];
+
+    if (!item) return;
+
+    alert(
+      item.displayDate + "\n\n" +
+      "Лично число: " + item.number + "\n\n" +
+      item.meaning + "\n\n" +
+      item.forecast.join("\n\n")
+    );
+  };
+
+  window.astroClearHistory = function () {
+    if (confirm("Сигурна ли си, че искаш да изтриеш историята?")) {
+      localStorage.removeItem("astroLuckHistory");
+      renderHistory();
+    }
+  };
+
+  renderForecast();
+  renderHistory();
+
+})();
+</script>
+<!-- КРАЙ НА ASTRO LUCK МОДУЛА -->
+
   DOCTYPE html>
 <html lang="bg">
 <head>
